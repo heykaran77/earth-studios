@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import { ReactLenis } from "lenis/react";
 import { useEffect, useRef } from "react";
+import CanvasRendering from "./components/CanvasRendering";
 
 const App = () => {
   const lenisRef = useRef();
@@ -20,8 +21,13 @@ const App = () => {
       root
       options={{ autoRaf: false, lerp: 0.1, smoothTouch: true }}
       ref={lenisRef}>
-      <div className="h-screen w-full bg-zinc-900">
-        <div className="h-[1500vh] bg-amber-200"></div>
+      <div className="w-full bg-zinc-900">
+        <div className="w-full h-[1500vh] relative">
+          <div className="w-full h-screen sticky top-0 left-0">
+            {/* canvas  */}
+            <CanvasRendering />
+          </div>
+        </div>
       </div>
     </ReactLenis>
   );
