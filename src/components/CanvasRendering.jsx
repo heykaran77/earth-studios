@@ -1,9 +1,10 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 gsap.registerPlugin(ScrollTrigger);
 
-const CanvasRendering = () => {
+const CanvasRendering = ({ parentRef }) => {
   const canvasRef = useRef(null);
   const frameCount = 382;
   const currentFrame = (i) => `/Images/Frame_${String(i).padStart(3, "0")}.jpg`;
@@ -17,17 +18,7 @@ const CanvasRendering = () => {
     const yShift = (canvas.height - img.height * ratio) / 2;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(
-      img,
-      0,
-      0,
-      img.width,
-      img.height,
-      xShift,
-      yShift,
-      img.width * ratio,
-      img.height * ratio
-    );
+    ctx.drawImage(img, xShift, yShift, img.width * ratio, img.height * ratio);
   };
 
   useEffect(() => {
@@ -50,15 +41,18 @@ const CanvasRendering = () => {
       images[0].onload = () => {
         scaleImage(images[0], context);
       };
+
       if (images.length === 382) {
         gsap.to(imageSequence, {
           frame: frameCount - 1,
           snap: "frame",
+          ease: "none",
           scrollTrigger: {
-            trigger: canvas,
+            trigger: parentRef.current,
             start: "top top",
-            end: "1500% top",
-            markers: true,
+            end: "bottom bottom",
+            scrub: true,
+            // markers: true,
           },
 
           onUpdate: () => scaleImage(images[imageSequence.frame], context),
@@ -67,7 +61,7 @@ const CanvasRendering = () => {
         const handleResize = () => {
           canvas.width = window.innerWidth;
           canvas.height = window.innerHeight;
-          scaleImage(images[(imageSequence.frame, context)]);
+          scaleImage(images[imageSequence.frame], context);
         };
 
         window.addEventListener("resize", handleResize);
@@ -75,6 +69,7 @@ const CanvasRendering = () => {
         return () => window.removeEventListener("resize", handleResize);
       }
     }, canvasRef);
+
     return () => ctx.revert();
   }, []);
 

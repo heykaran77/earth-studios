@@ -2,9 +2,11 @@ import gsap from "gsap";
 import { ReactLenis } from "lenis/react";
 import { useEffect, useRef } from "react";
 import CanvasRendering from "./components/CanvasRendering";
+import Preloader from "./components/Preloader";
 
 const App = () => {
   const lenisRef = useRef();
+  const parentRef = useRef();
 
   useEffect(() => {
     function update(time) {
@@ -22,10 +24,10 @@ const App = () => {
       options={{ autoRaf: false, lerp: 0.1, smoothTouch: true }}
       ref={lenisRef}>
       <div className="w-full bg-zinc-900">
-        <div className="w-full h-[1500vh] relative">
+        <div ref={parentRef} className="w-full h-[1500vh] relative">
           <div className="w-full h-screen sticky top-0 left-0">
             {/* canvas  */}
-            <CanvasRendering />
+            <CanvasRendering parentRef={parentRef} />
           </div>
         </div>
       </div>
